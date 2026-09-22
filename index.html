@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flores Amarillas con Amor 🌻✨ | 21 de Septiembre</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,19 +11,24 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=flores2026">
 </head>
 <body>
     <!-- Canvas para pétalos de flores cayendo -->
     <canvas id="petalsCanvas"></canvas>
 
+    <!-- Reproductor de YouTube en segundo plano (Oculto) -->
+    <div id="yt-player-container" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; left: -9999px;">
+        <div id="yt-player"></div>
+    </div>
+
     <!-- Barra de control superior (Música y Efectos) -->
     <div class="top-controls">
         <button id="musicBtn" class="control-btn" title="Activar/Desactivar Música">
-            <i class="fas fa-music"></i> <span id="musicText">Música</span>
+            <i class="fas fa-music"></i> <span id="musicText">Música 🎵</span>
         </button>
         <button id="sparklesBtn" class="control-btn" title="Más Pétalos">
-            <i class="fas fa-sparkles"></i> <span>Más Flores 🌻</span>
+            <i class="fas fa-sparkles"></i> <span>Flores 🌻</span>
         </button>
     </div>
 
@@ -36,7 +41,7 @@
                 <h1>¡Flores Amarillas Especiales!</h1>
                 <p class="envelope-subtitle">Para las mujeres más increíbles de mi vida: <strong>Mamá y Mis Hermanas</strong></p>
                 <div class="tap-hint">
-                    <i class="fas fa-heart pulse"></i> Toca aquí para abrir tu tarjeta especial <i class="fas fa-heart pulse"></i>
+                    <i class="fas fa-heart pulse"></i> Toca para abrir tu tarjeta <i class="fas fa-heart pulse"></i>
                 </div>
             </div>
         </section>
@@ -47,14 +52,14 @@
             <header class="header-section">
                 <div class="spring-tag">✨ Feliz 21 de Septiembre ✨</div>
                 <h1 class="title-romantic">Flores Amarillas Infinitas</h1>
-                <p class="subtitle-text">Porque aunque no hayan llegado flores físicas hoy, este jardín virtual brilla para ustedes con todo el amor del mundo 💛🌻</p>
+                <p class="subtitle-text">Aunque no hayan llegado flores físicas hoy, este jardín virtual brilla para ustedes con todo nuestro amor 💛🌻</p>
             </header>
 
             <!-- SECCIÓN DESTACADA: EL MAPACHITO Y LA FLOR -->
             <section class="raccoon-section">
                 <div class="raccoon-card">
                     <div class="image-frame">
-                        <img src="assets/images/mapache_flor.png" alt="Mapachito entregando una flor amarilla" id="raccoonImg">
+                        <img src="assets/images/mapache_flor.png" alt="Mapachito entregando una flor amarilla" id="raccoonImg" onerror="this.src='assets/images/mapache_flor.jpg'">
                         <div class="frame-shine"></div>
                     </div>
                     <div class="raccoon-caption">
@@ -71,10 +76,10 @@
                     <i class="fas fa-heart"></i> Para Mamá 💖
                 </button>
                 <button class="tab-btn" data-tab="hermanasTab">
-                    <i class="fas fa-star"></i> Para Mis Hermanas 🌸
+                    <i class="fas fa-star"></i> Mis Hermanas 🌸
                 </button>
                 <button class="tab-btn" data-tab="jardinTab">
-                    <i class="fas fa-seedling"></i> Jardín Interactivo 🌼
+                    <i class="fas fa-seedling"></i> Jardín 🌼
                 </button>
             </nav>
 
@@ -94,11 +99,11 @@
                                 <i class="fas fa-quote-left quote-icon"></i>
                                 <span>"Ninguna flor en el mundo se compara con la calidez de tu amor y la fuerza de tu corazón."</span>
                             </div>
-                            <p>Que este ramo de flores amarillas virtuales te traiga una enorme sonrisa, un abrazo apretado y el agradecimiento más profundo de quienes te amamos.</p>
+                            <p>Que este ramo de flores amarillas virtuales te traiga una enorme sonrisa, un abrazo apretado y el agradecimiento más profundo.</p>
                             
                             <div class="action-bar">
                                 <button class="love-btn" onclick="sendLove('Mamá')">
-                                    <i class="fas fa-heart"></i> Darle un abrazo a Mamá (<span id="countMama">0</span>)
+                                    <i class="fas fa-heart"></i> Abrazo para Mamá (<span id="countMama">0</span>)
                                 </button>
                             </div>
                         </div>
@@ -120,7 +125,7 @@
                                 <div class="mini-card">
                                     <div class="mini-icon">🌻</div>
                                     <h4>Alegría Siempre</h4>
-                                    <p>Que sus días estén siempre iluminados con la misma energía de los girasoles.</p>
+                                    <p>Que sus días estén siempre iluminados con la energía de los girasoles.</p>
                                 </div>
                                 <div class="mini-card">
                                     <div class="mini-icon">🌼</div>
@@ -131,7 +136,7 @@
 
                             <div class="action-bar">
                                 <button class="love-btn hermanas-btn" onclick="sendLove('Hermanas')">
-                                    <i class="fas fa-sparkles"></i> Enviar Amor a mis Hermanas (<span id="countHermanas">0</span>)
+                                    <i class="fas fa-sparkles"></i> Amor a mis Hermanas (<span id="countHermanas">0</span>)
                                 </button>
                             </div>
                         </div>
@@ -146,20 +151,20 @@
                             <h2>¡Haz florecer el jardín!</h2>
                         </div>
                         <div class="box-body center-text">
-                            <p>Haz clic o toca en cualquier lugar de abajo para plantar y hacer florecer hermosas girasoles y rosas amarillas.</p>
+                            <p>Toca en cualquier lugar de abajo para hacer florecer girasoles y flores amarillas.</p>
                             
                             <div class="garden-area" id="gardenArea">
                                 <div class="garden-instruction">
-                                    <i class="fas fa-hand-pointer pulse"></i> Toca o haz clic aquí para hacer florecer
+                                    <i class="fas fa-hand-pointer pulse"></i> Toca aquí para plantar flores
                                 </div>
                             </div>
 
                             <div class="garden-controls">
                                 <button id="clearGardenBtn" class="secondary-btn">
-                                    <i class="fas fa-trash-alt"></i> Limpiar Jardín
+                                    <i class="fas fa-trash-alt"></i> Limpiar
                                 </button>
                                 <button id="fullBouquetBtn" class="primary-btn">
-                                    <i class="fas fa-spa"></i> Llenar de Flores Amarillas 🌻
+                                    <i class="fas fa-spa"></i> Llenar de Flores 🌻
                                 </button>
                             </div>
                         </div>
@@ -178,9 +183,11 @@
         </main>
     </div>
 
-    <!-- AUDIO ELEMENT / WEB AUDIO SCRIPT -->
-    <script src="js/sound.js"></script>
-    <script src="js/petals.js"></script>
-    <script src="js/main.js"></script>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- AUDIO Y SCRIPTS -->
+    <script src="js/sound.js?v=flores2026"></script>
+    <script src="js/petals.js?v=flores2026"></script>
+    <script src="js/main.js?v=flores2026"></script>
 </body>
 </html>
