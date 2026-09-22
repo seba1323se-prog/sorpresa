@@ -1,22 +1,57 @@
 /**
- * Web Audio API Sound Synthesizer
- * Genera música relajante de piano/arpegios y efectos de sonido en tiempo real sin requerir archivos mp3 externos.
+ * Reproductor de Música de YouTube en Segundo Plano
+ * Canción: Flores Amarillas (Floricienta) [URL: https://youtu.com/S7gMzYqXIZc]
  */
 
 class SoundManager {
     constructor() {
         this.audioCtx = null;
+        this.ytPlayer = null;
+        this.ytReady = false;
         this.isPlaying = false;
-        this.timer = null;
-        this.noteIndex = 0;
+        this.videoId = 'S7gMzYqXIZc';
+        
+        this.initYouTubeAPI();
+    }
 
-        // Notas musicales en Hz (Frecuencias dulces para C Mayor / Sol)
-        this.notes = [
-            261.63, 329.63, 392.00, 523.25, // C4, E4, G4, C5
-            293.66, 369.99, 440.00, 587.33, // D4, F#4, A4, D5
-            329.63, 392.00, 493.88, 659.25, // E4, G4, B4, E5
-            349.23, 440.00, 523.25, 698.46  // F4, A4, C5, F5
-        ];
+    initYouTubeAPI() {
+        if (window.YT && window.YT.Player) {
+            this.createPlayer();
+        } else {
+            window.onYouTubeIframeAPIReady = () => {
+                this.createPlayer();
+            };
+        }
+    }
+
+    createPlayer() {
+        if (this.ytPlayer) return;
+        try {
+            this.ytPlayer = new YT.Player('yt-player', {
+                height: '200',
+                width: '200',
+                videoId: this.videoId,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'loop': 1,
+                    'playlist': this.videoId,
+                    'playsinline': 1,
+                    'enablejsapi': 1,
+                    'origin': window.location.origin
+                },
+                events: {
+                    'onReady': () => {
+                        this.ytReady = true;
+                        if (this.isPlaying) {
+                            this.playMusic();
+                        }
+                    }
+                }
+            });
+        } catch (e) {
+            console.log('Error al crear reproductor de YouTube:', e);
+        }
     }
 
     initCtx() {
@@ -24,13 +59,58 @@ class SoundManager {
             const AudioContext = window.AudioContext || window.webkitAudioContext;
             this.audioCtx = new AudioContext();
         }
-        if (this.audioCtx.state === 'suspended') {
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
             this.audioCtx.resume();
         }
     }
 
-    playNote(freq, duration = 1.2, type = 'sine', volume = 0.15) {
-        if (!this.audioCtx) return;
+    playMusic() {
+        this.initCtx();
+        this.isPlaying = true;
+
+        if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') {
+            try {
+                this.ytPlayer.unMute();
+                this.ytPlayer.setVolume(100);
+                this.ytPlayer.playVideo();
+            } catch (e) {
+                console.log('Error de reproduccion:', e);
+            }
+        } else {
+            // Reintentar si el reproductor de YouTube aún se está cargando
+            setTimeout(() => {
+                if (this.ytPlayer && typeof this.ytPlayer.playVideo === 'function') {
+                    this.ytPlayer.unMute();
+                    this.ytPlayer.setVolume(100);
+                    this.ytPlayer.playVideo();
+                }
+            }, 600);
+        }
+    }
+
+    pauseMusic() {
+        this.isPlaying = false;
+        if (this.ytPlayer && typeof this.ytPlayer.pauseVideo === 'function') {
+            try {
+                this.ytPlayer.pauseVideo();
+            } catch (e) {
+                console.log('Error de pausa:', e);
+            }
+        }
+    }
+
+    toggleMusic() {
+        if (this.isPlaying) {
+            this.pauseMusic();
+            return false;
+        } else {
+            this.playMusic();
+            return true;
+        }
+    }
+
+    playNote(freq, duration = 0.3, type = 'sine', volume = 0.15) {
+        this.initCtx();
         try {
             const osc = this.audioCtx.createOscillator();
             const gain = this.audioCtx.createGain();
@@ -47,60 +127,21 @@ class SoundManager {
             osc.start();
             osc.stop(this.audioCtx.currentTime + duration);
         } catch (e) {
-            console.log('Audio play error:', e);
-        }
-    }
-
-    toggleMusic() {
-        this.initCtx();
-        this.isPlaying = !this.isPlaying;
-
-        if (this.isPlaying) {
-            this.startLoop();
-        } else {
-            this.stopLoop();
-        }
-        return this.isPlaying;
-    }
-
-    startLoop() {
-        if (this.timer) clearInterval(this.timer);
-        this.noteIndex = 0;
-
-        this.timer = setInterval(() => {
-            if (!this.isPlaying) return;
-            const freq = this.notes[this.noteIndex % this.notes.length];
-            this.playNote(freq, 1.5, 'sine', 0.12);
-            
-            // Nota armoniosa secundaria ocasional
-            if (this.noteIndex % 3 === 0) {
-                this.playNote(freq * 1.5, 2.0, 'triangle', 0.05);
-            }
-
-            this.noteIndex++;
-        }, 450);
-    }
-
-    stopLoop() {
-        if (this.timer) {
-            clearInterval(this.timer);
-            this.timer = null;
+            console.log('Audio pop error:', e);
         }
     }
 
     playPop() {
-        this.initCtx();
         const freq = 523.25 + Math.random() * 300;
-        this.playNote(freq, 0.3, 'sine', 0.2);
+        this.playNote(freq, 0.2, 'sine', 0.15);
     }
 
     playSparkle() {
-        this.initCtx();
         const baseFreq = 800;
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 3; i++) {
             setTimeout(() => {
-                this.playNote(baseFreq + i * 200, 0.4, 'sine', 0.1);
-            }, i * 70);
+                this.playNote(baseFreq + i * 200, 0.3, 'sine', 0.1);
+            }, i * 60);
         }
     }
 }

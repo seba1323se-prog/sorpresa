@@ -11,20 +11,20 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Styles -->
-    <link rel="stylesheet" href="css/styles.css?v=flores2026">
+    <link rel="stylesheet" href="css/styles.css?v=flores2026_yt">
 </head>
 <body>
     <!-- Canvas para pétalos de flores cayendo -->
     <canvas id="petalsCanvas"></canvas>
 
     <!-- Reproductor de YouTube en segundo plano (Oculto) -->
-    <div id="yt-player-container" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; left: -9999px;">
+    <div id="yt-player-container" style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; opacity: 0.001; pointer-events: none; z-index: -100;">
         <div id="yt-player"></div>
     </div>
 
     <!-- Barra de control superior (Música y Efectos) -->
     <div class="top-controls">
-        <button id="musicBtn" class="control-btn" title="Activar/Desactivar Música">
+        <button id="musicBtn" class="control-btn" title="Activar/Desactivar Música de YouTube">
             <i class="fas fa-music"></i> <span id="musicText">Música 🎵</span>
         </button>
         <button id="sparklesBtn" class="control-btn" title="Más Pétalos">
@@ -186,8 +186,8 @@
     <!-- YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <!-- AUDIO Y SCRIPTS -->
-    <script src="js/sound.js?v=flores2026"></script>
-    <script src="js/petals.js?v=flores2026"></script>
-    <script src="js/main.js?v=flores2026"></script>
+    <script src="js/sound.js?v=flores2026_yt"></script>
+    <script src="js/petals.js?v=flores2026_yt"></script>
+    <script src="js/main.js?v=flores2026_yt"></script>
 </body>
 </html>
