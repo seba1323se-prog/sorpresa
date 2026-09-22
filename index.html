@@ -3,143 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Feliz Cumpleaños, Papá Profe! 🎓➕🎉</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css"></script>
+    <title>Flores Amarillas con Amor 🌻✨ | 21 de Septiembre</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Poppins:wght@300;400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Styles -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <!-- Canvas para pétalos de flores cayendo -->
+    <canvas id="petalsCanvas"></canvas>
 
-    <!-- Fondo de Símbolos Matemáticos -->
-    <div id="math-bg-symbols"></div>
+    <!-- Barra de control superior (Música y Efectos) -->
+    <div class="top-controls">
+        <button id="musicBtn" class="control-btn" title="Activar/Desactivar Música">
+            <i class="fas fa-music"></i> <span id="musicText">Música</span>
+        </button>
+        <button id="sparklesBtn" class="control-btn" title="Más Pétalos">
+            <i class="fas fa-sparkles"></i> <span>Más Flores 🌻</span>
+        </button>
+    </div>
 
-    <!-- Canvas para Confeti -->
-    <canvas id="confetti-canvas"></canvas>
-
-    <!-- Pizarra Principal del Juego -->
-    <main class="chalkboard-container">
-        
-        <!-- Cabecera -->
-        <header class="chalkboard-header">
-            <div class="title-badge">
-                <span>🎓</span>
-                <h1>Math Quest: Edición Papá Profe</h1>
-            </div>
-            <button id="audio-toggle-btn" class="audio-btn" type="button">
-                🔊 Sonido: ON
-            </button>
-        </header>
-
-        <!-- Sección de Progreso -->
-        <section id="progress-section" class="progress-section">
-            <div class="progress-header">
-                <span>Desafíos Matemáticos de Cumpleaños</span>
-                <span id="progress-text">Nivel 1 de 5</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    <div class="main-wrapper">
+        <!-- PANTALLA INICIAL: SOBRE / CARTA INTERACTIVA -->
+        <section id="welcomeScreen" class="welcome-screen">
+            <div class="envelope-card" id="openCardBtn">
+                <div class="envelope-badge">21 de Septiembre 💛</div>
+                <div class="flower-icon-hero">🌻</div>
+                <h1>¡Flores Amarillas Especiales!</h1>
+                <p class="envelope-subtitle">Para las mujeres más increíbles de mi vida: <strong>Mamá y Mis Hermanas</strong></p>
+                <div class="tap-hint">
+                    <i class="fas fa-heart pulse"></i> Toca aquí para abrir tu tarjeta especial <i class="fas fa-heart pulse"></i>
+                </div>
             </div>
         </section>
 
-        <!-- Área de Juego (Layout 2 Columnas) -->
-        <div id="game-play-area" class="game-layout">
-            
-            <!-- Columna Izquierda: Avatar Profe -->
-            <div class="profe-avatar-card">
-                <div class="profe-img-wrapper">
-                    <img id="profe-img" src="assets/images/einstein_writing.png" alt="Profesor Einstein evaluando el ejercicio">
+        <!-- CONTENIDO PRINCIPAL DE LA TARJETA -->
+        <main id="cardContent" class="card-content hidden">
+            <!-- Encabezado -->
+            <header class="header-section">
+                <div class="spring-tag">✨ Feliz 21 de Septiembre ✨</div>
+                <h1 class="title-romantic">Flores Amarillas Infinitas</h1>
+                <p class="subtitle-text">Porque aunque no hayan llegado flores físicas hoy, este jardín virtual brilla para ustedes con todo el amor del mundo 💛🌻</p>
+            </header>
+
+            <!-- SECCIÓN DESTACADA: EL MAPACHITO Y LA FLOR -->
+            <section class="raccoon-section">
+                <div class="raccoon-card">
+                    <div class="image-frame">
+                        <img src="assets/images/mapache_flor.png" alt="Mapachito entregando una flor amarilla" id="raccoonImg">
+                        <div class="frame-shine"></div>
+                    </div>
+                    <div class="raccoon-caption">
+                        <span class="badge-cute">¡Mensajero Especial! 🦝🌻</span>
+                        <h3>"¡Te traje la flor más hermosa y brillante de todas!"</h3>
+                        <p>Este mapachito corrió por todo el jardín primaveral para asegurarse de que nadie en casa se quedara sin su flor amarilla hoy.</p>
+                    </div>
                 </div>
-                <div id="profe-dialog" class="profe-dialog-bubble">
-                    ¡Profe listo a la pizarra! Resuelve el ejercicio.
-                </div>
+            </section>
+
+            <!-- NAVEGACIÓN DE PESTAÑAS (MAMÁ / HERMANAS / JARDÍN INTERACTIVO) -->
+            <nav class="tabs-nav">
+                <button class="tab-btn active" data-tab="mamaTab">
+                    <i class="fas fa-heart"></i> Para Mamá 💖
+                </button>
+                <button class="tab-btn" data-tab="hermanasTab">
+                    <i class="fas fa-star"></i> Para Mis Hermanas 🌸
+                </button>
+                <button class="tab-btn" data-tab="jardinTab">
+                    <i class="fas fa-seedling"></i> Jardín Interactivo 🌼
+                </button>
+            </nav>
+
+            <!-- CONTENIDO DE LAS PESTAÑAS -->
+            <div class="tab-content-container">
+                
+                <!-- PESTAÑA: MAMÁ -->
+                <article id="mamaTab" class="tab-panel active">
+                    <div class="card-box mama-box">
+                        <div class="box-header">
+                            <span class="flower-badge">🌻 Para la mejor Mamá 🌻</span>
+                            <h2>Mamá, eres la luz de nuestro hogar 💛</h2>
+                        </div>
+                        <div class="box-body">
+                            <p>En este 21 de septiembre, quiero recordarte lo inmensamente valiosa y amada que eres. Las flores amarillas representan la alegría, la luz cálida del sol y el amor incondicional... y todo eso es exactamente lo que tú nos brindas cada día.</p>
+                            <div class="quote-card">
+                                <i class="fas fa-quote-left quote-icon"></i>
+                                <span>"Ninguna flor en el mundo se compara con la calidez de tu amor y la fuerza de tu corazón."</span>
+                            </div>
+                            <p>Que este ramo de flores amarillas virtuales te traiga una enorme sonrisa, un abrazo apretado y el agradecimiento más profundo de quienes te amamos.</p>
+                            
+                            <div class="action-bar">
+                                <button class="love-btn" onclick="sendLove('Mamá')">
+                                    <i class="fas fa-heart"></i> Darle un abrazo a Mamá (<span id="countMama">0</span>)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PESTAÑA: HERMANAS -->
+                <article id="hermanasTab" class="tab-panel">
+                    <div class="card-box hermanas-box">
+                        <div class="box-header">
+                            <span class="flower-badge">🌼 Para Mis Queridas Hermanas 🌼</span>
+                            <h2>¡Para mis hermanas del alma! ✨</h2>
+                        </div>
+                        <div class="box-body">
+                            <p>¡Feliz 21 de Septiembre! No podía faltar su ramo especial de flores amarillas para llenar su día de brillo, risas y momentos bonitos.</p>
+                            <p>Gracias por ser mis compañeras de vida, por las risas compartidas y por estar siempre presentes. ¡Que nunca falte la felicidad ni las flores en sus caminos!</p>
+                            
+                            <div class="cards-grid">
+                                <div class="mini-card">
+                                    <div class="mini-icon">🌻</div>
+                                    <h4>Alegría Siempre</h4>
+                                    <p>Que sus días estén siempre iluminados con la misma energía de los girasoles.</p>
+                                </div>
+                                <div class="mini-card">
+                                    <div class="mini-icon">🌼</div>
+                                    <h4>Compañeras Incondicionales</h4>
+                                    <p>Tenerlas como hermanas es el regalo más lindo de la vida.</p>
+                                </div>
+                            </div>
+
+                            <div class="action-bar">
+                                <button class="love-btn hermanas-btn" onclick="sendLove('Hermanas')">
+                                    <i class="fas fa-sparkles"></i> Enviar Amor a mis Hermanas (<span id="countHermanas">0</span>)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PESTAÑA: JARDÍN INTERACTIVO -->
+                <article id="jardinTab" class="tab-panel">
+                    <div class="card-box jardin-box">
+                        <div class="box-header">
+                            <span class="flower-badge">✨ Crea tu Ramo de Flores ✨</span>
+                            <h2>¡Haz florecer el jardín!</h2>
+                        </div>
+                        <div class="box-body center-text">
+                            <p>Haz clic o toca en cualquier lugar de abajo para plantar y hacer florecer hermosas girasoles y rosas amarillas.</p>
+                            
+                            <div class="garden-area" id="gardenArea">
+                                <div class="garden-instruction">
+                                    <i class="fas fa-hand-pointer pulse"></i> Toca o haz clic aquí para hacer florecer
+                                </div>
+                            </div>
+
+                            <div class="garden-controls">
+                                <button id="clearGardenBtn" class="secondary-btn">
+                                    <i class="fas fa-trash-alt"></i> Limpiar Jardín
+                                </button>
+                                <button id="fullBouquetBtn" class="primary-btn">
+                                    <i class="fas fa-spa"></i> Llenar de Flores Amarillas 🌻
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
             </div>
 
-            <!-- Columna Derecha: Tarjeta del Problema -->
-            <div class="problem-card">
-                <span id="level-tag" class="level-tag">Nivel 1: Suma de Cariño</span>
-
-                <p id="problem-statement" class="problem-statement">
-                    Un examen rápido para entrar en calor, Profe. Si sumamos tu infinita paciencia (50) más tu inmenso amor por la familia (50), ¿cuál es el porcentaje exacto de orgullo que sentimos por ti?
-                </p>
-
-                <!-- Caja de Fórmula Matemática -->
-                <div id="math-formula-box" class="math-formula-box">
-                    50 + 50 = ?
+            <!-- DEDICATORIA FINAL Y PIE DE PÁGINA -->
+            <footer class="footer-section">
+                <div class="signature-card">
+                    <p class="made-with">Con todo mi cariño para ustedes 💛</p>
+                    <p class="date-tag">21 de Septiembre - Día de las Flores Amarillas</p>
                 </div>
-
-                <!-- Formulario de Respuesta -->
-                <form id="answer-form" class="answer-form">
-                    <input type="text" id="user-answer" class="answer-input" placeholder="Tu respuesta aquí..." autocomplete="off">
-                    <button type="submit" class="btn-primary">
-                        <span>✔ Evaluar</span>
-                    </button>
-                    <button type="button" id="btn-hint" class="btn-hint">
-                        💡 Pedir Pista
-                    </button>
-                </form>
-
-                <!-- Caja de Feedback / Pistas -->
-                <div id="feedback-box" class="feedback-box"></div>
-            </div>
-        </div>
-
-        <!-- Pantalla Final - Gran Homenaje -->
-        <div id="final-screen" class="final-screen">
-            <div class="certificate-card">
-                <div class="certificate-badge">🏆 HONOR AL MEJOR PROFE Y PAPÁ 🏆</div>
-
-                <!-- Imagen Final con el libro de Einstein -->
-                <div class="final-img-box">
-                    <img src="assets/images/einstein_final.png" alt="¡Feliz Cumpleaños, Papá! Tu ingenio es mi mayor inspiración.">
-                </div>
-
-                <h2 class="certificate-title">¡Certificado de Orgullo Infinito!</h2>
-                <p class="certificate-sub">Otorgado al Profesor de Matemáticas más sabio, paciente y cariñoso del mundo.</p>
-
-                <div class="final-message-body">
-                    <p>¡Querido Papá!</p>
-                    <p>Hoy celebramos no solo tus años de vida, sino cada una de las enseñanzas que nos regalas a diario. Gracias por enseñarme a pensar con lógica, a resolver los problemas con calma y a nunca rendirme ante las ecuaciones de la vida.</p>
-                    <br>
-                    <div class="final-math-formula">lim <sub><i>t</i> &rarr; &infin;</sub> (Amor por ti) = &infin;</div>
-                    <p>¡Que tengas un maravilloso y feliz cumpleaños!</p>
-                </div>
-
-                <div class="signature-line">
-                    <span>Con todo mi cariño y admiración ❤️</span>
-                    <span>Tu hijo Sebastián 🎓❤️</span>
-                </div>
-            </div>
-
-            <button id="restart-btn" class="restart-btn" type="button">
-                🔄 Jugar de Nuevo
-            </button>
-        </div>
-
-    </main>
-
-    <!-- Modal de Premio (Mensaje Bonito por Nivel) -->
-    <div id="reward-modal" class="modal-overlay">
-        <div class="reward-card-modal">
-            <div class="modal-header-icon">🎉</div>
-            <h2 id="modal-title" class="modal-title">¡Demostración Impecable!</h2>
-
-            <div class="modal-img-container">
-                <img id="modal-profe-img" src="assets/images/einstein_idea.png" alt="Profesor Einstein celebrando respuesta correcta">
-            </div>
-
-            <p id="reward-message-text" class="reward-message-text">
-                Sumando todos los días de mi vida a tu lado, me doy cuenta de lo afortunado que soy de tenerte como papá.
-            </p>
-
-            <button id="btn-next-level" class="btn-next-level" type="button">
-                Siguiente Desafío ➔
-            </button>
-        </div>
+            </footer>
+        </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- AUDIO ELEMENT / WEB AUDIO SCRIPT -->
     <script src="js/sound.js"></script>
-    <script src="js/confetti.js"></script>
-    <script src="js/game.js"></script>
+    <script src="js/petals.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

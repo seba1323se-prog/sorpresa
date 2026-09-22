@@ -1,88 +1,108 @@
-// Módulo de Audio usando Web Audio API (Sin archivos externos de audio)
+/**
+ * Web Audio API Sound Synthesizer
+ * Genera música relajante de piano/arpegios y efectos de sonido en tiempo real sin requerir archivos mp3 externos.
+ */
 
-class SoundEngine {
+class SoundManager {
     constructor() {
-        this.ctx = null;
-        this.muted = false;
-    }
+        this.audioCtx = null;
+        this.isPlaying = false;
+        this.timer = null;
+        this.noteIndex = 0;
 
-    init() {
-        if (!this.ctx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            this.ctx = new AudioContext();
-        }
-        if (this.ctx.state === 'suspended') {
-            this.ctx.resume();
-        }
-    }
-
-    toggleMute() {
-        this.muted = !this.muted;
-        return this.muted;
-    }
-
-    playNote(freq, duration, type = 'sine', delay = 0) {
-        if (this.muted) return;
-        this.init();
-
-        setTimeout(() => {
-            try {
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-
-                gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
-            } catch (e) {
-                console.error("Audio error:", e);
-            }
-        }, delay * 1000);
-    }
-
-    // Efecto de respuesta correcta (Acorde victorioso)
-    playCorrect() {
-        this.playNote(523.25, 0.15, 'triangle', 0);     // C5
-        this.playNote(659.25, 0.15, 'triangle', 0.1);   // E5
-        this.playNote(783.99, 0.3, 'triangle', 0.2);    // G5
-        this.playNote(1046.50, 0.5, 'sine', 0.35);     // C6
-    }
-
-    // Efecto de respuesta incorrecta (Beep suave)
-    playWrong() {
-        this.playNote(220, 0.2, 'sawtooth', 0);
-        this.playNote(196, 0.3, 'sawtooth', 0.15);
-    }
-
-    // Efecto de pista
-    playHint() {
-        this.playNote(440, 0.1, 'sine', 0);
-        this.playNote(880, 0.2, 'sine', 0.1);
-    }
-
-    // Melodía de Feliz Cumpleaños (Sintetizada)
-    playBirthdaySong() {
-        if (this.muted) return;
-        const notes = [
-            { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.2 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.8 },
-            { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.2 }, { f: 293.66, d: 0.5 }, { f: 261.63, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 0.8 },
-            { f: 261.63, d: 0.3 }, { f: 261.63, d: 0.2 }, { f: 523.25, d: 0.5 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 329.63, d: 0.5 }, { f: 293.66, d: 0.6 },
-            { f: 466.16, d: 0.3 }, { f: 466.16, d: 0.2 }, { f: 440.00, d: 0.5 }, { f: 349.23, d: 0.5 }, { f: 392.00, d: 0.5 }, { f: 349.23, d: 1.0 }
+        // Notas musicales en Hz (Frecuencias dulces para C Mayor / Sol)
+        this.notes = [
+            261.63, 329.63, 392.00, 523.25, // C4, E4, G4, C5
+            293.66, 369.99, 440.00, 587.33, // D4, F#4, A4, D5
+            329.63, 392.00, 493.88, 659.25, // E4, G4, B4, E5
+            349.23, 440.00, 523.25, 698.46  // F4, A4, C5, F5
         ];
+    }
 
-        let currentTime = 0;
-        notes.forEach(n => {
-            this.playNote(n.f, n.d, 'triangle', currentTime);
-            currentTime += n.d + 0.08;
-        });
+    initCtx() {
+        if (!this.audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.audioCtx = new AudioContext();
+        }
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+    }
+
+    playNote(freq, duration = 1.2, type = 'sine', volume = 0.15) {
+        if (!this.audioCtx) return;
+        try {
+            const osc = this.audioCtx.createOscillator();
+            const gain = this.audioCtx.createGain();
+
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+
+            gain.gain.setValueAtTime(volume, this.audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + duration);
+
+            osc.connect(gain);
+            gain.connect(this.audioCtx.destination);
+
+            osc.start();
+            osc.stop(this.audioCtx.currentTime + duration);
+        } catch (e) {
+            console.log('Audio play error:', e);
+        }
+    }
+
+    toggleMusic() {
+        this.initCtx();
+        this.isPlaying = !this.isPlaying;
+
+        if (this.isPlaying) {
+            this.startLoop();
+        } else {
+            this.stopLoop();
+        }
+        return this.isPlaying;
+    }
+
+    startLoop() {
+        if (this.timer) clearInterval(this.timer);
+        this.noteIndex = 0;
+
+        this.timer = setInterval(() => {
+            if (!this.isPlaying) return;
+            const freq = this.notes[this.noteIndex % this.notes.length];
+            this.playNote(freq, 1.5, 'sine', 0.12);
+            
+            // Nota armoniosa secundaria ocasional
+            if (this.noteIndex % 3 === 0) {
+                this.playNote(freq * 1.5, 2.0, 'triangle', 0.05);
+            }
+
+            this.noteIndex++;
+        }, 450);
+    }
+
+    stopLoop() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
+    }
+
+    playPop() {
+        this.initCtx();
+        const freq = 523.25 + Math.random() * 300;
+        this.playNote(freq, 0.3, 'sine', 0.2);
+    }
+
+    playSparkle() {
+        this.initCtx();
+        const baseFreq = 800;
+        for (let i = 0; i < 4; i++) {
+            setTimeout(() => {
+                this.playNote(baseFreq + i * 200, 0.4, 'sine', 0.1);
+            }, i * 70);
+        }
     }
 }
 
-const sounds = new SoundEngine();
+window.soundManager = new SoundManager();
